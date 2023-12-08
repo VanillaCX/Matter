@@ -1,3 +1,6 @@
-const {DefaultModule} = require("./modules/default");
+require('dotenv').config();
 
-module.exports = {DefaultModule}
+const {Matter} = require("./modules/Matter");
+const {Model} = require("./modules/Model");
+
+module.exports = {Matter, Model}
