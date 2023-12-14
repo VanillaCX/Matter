@@ -1,7 +1,7 @@
 const { Query } = require("@VanillaCX/QueryCX");
 
 const account = process.env.SESSION_USER_ID;
-const database = process.env.MATTERCX_DATABASE;
+const database = process.env.MATTER_DATABASE;
 
 const modelcollection = `${account}-models`;
 const editionscollection = `${account}-editions`;
