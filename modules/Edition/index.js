@@ -1,4 +1,4 @@
-const { Schema, SchemaError, ShortText } = require("@VanillaCX/SchemaCX")
+const { Schema, SchemaError, ShortText } = require("@VanillaCX/Schema")
 const {QEditions} = require("../Queries")
 const {Meta} = require("../Meta")
 

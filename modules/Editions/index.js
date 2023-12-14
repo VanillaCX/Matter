@@ -1,4 +1,4 @@
-const {Squid, SchemaError} = require("@VanillaCX/SchemaCX");
+const {Squid, SchemaError} = require("@VanillaCX/Schema");
 const {QEditions, QMatter} = require("../Queries")
 const {Edition} = require("../Edition")
 

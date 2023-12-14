@@ -1,4 +1,4 @@
-const { Query } = require("@VanillaCX/QueryCX");
+const { Query } = require("@VanillaCX/Query");
 
 const account = process.env.SESSION_USER_ID;
 const database = process.env.MATTER_DATABASE;

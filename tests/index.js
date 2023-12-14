@@ -1,5 +1,5 @@
 console.log("MatterCX Test");
-const { ShortText } = require("@VanillaCX/SchemaCX");
+const { ShortText } = require("@VanillaCX/Schema");
 const {Matter, Model} = require("../index.js");
 
 

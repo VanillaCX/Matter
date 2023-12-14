@@ -10,7 +10,7 @@ const {
     Schema,
     SchemaError,
     Stamp,
-} = require("@VanillaCX/SchemaCX")
+} = require("@VanillaCX/Schema")
 
 
 const metaSchema = new Schema({

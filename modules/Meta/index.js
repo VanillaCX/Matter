@@ -1,4 +1,4 @@
-const {Schema, SchemaError, ShortText, Stamp} = require("@VanillaCX/SchemaCX");
+const {Schema, SchemaError, ShortText, Stamp} = require("@VanillaCX/Schema");
 
 class Meta {
     #schema;

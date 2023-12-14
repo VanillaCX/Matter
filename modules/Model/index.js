@@ -2,7 +2,7 @@ const { QModels } = require("../Queries")
 
 const {
     Schema,
-} = require("@VanillaCX/SchemaCX")
+} = require("@VanillaCX/Schema")
 
 class Model {
     schema;

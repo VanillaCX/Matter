@@ -1,4 +1,4 @@
-const {Schema, SchemaError, ShortText} = require("@VanillaCX/SchemaCX");
+const {Schema, SchemaError, ShortText} = require("@VanillaCX/Schema");
 
 class Slots {
     static #schema = new Schema({
