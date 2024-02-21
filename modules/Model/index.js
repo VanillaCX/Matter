@@ -14,7 +14,7 @@ class Model {
     }
 
     validateDoc(document){
-        const {valid, errors, sanitised} = this.schema.validateDoc(document);
+        const {valid, errors, sanitised} = this.schema.validate(document);
 
         return {valid, errors, sanitised};
     }

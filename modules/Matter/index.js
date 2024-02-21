@@ -92,7 +92,7 @@ class Matter {
     }
 
     static validateDoc(document){
-        return this.#schema.validateDoc(document);
+        return this.#schema.validate(document);
     }
 
     static async create({model, author, name = `New ${model}`}){
@@ -107,9 +107,11 @@ class Matter {
 
         const modelInstance = await Model.open(model)
 
+
         if(!modelInstance){
             throw new ReferenceError("MODEL_NOT_FOUND")
         }
+
 
         // Can create the Matter now.
         const document = {

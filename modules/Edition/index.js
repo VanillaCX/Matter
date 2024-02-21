@@ -93,7 +93,7 @@ class Edition {
     constructor({document, model}){
         this.#schema = editionSchema(model);
 
-        const {valid, errors, sanitised} = this.#schema.validateDoc(document);
+        const {valid, errors, sanitised} = this.#schema.validate(document);
 
         if(!valid){
             throw new SchemaError(errors)

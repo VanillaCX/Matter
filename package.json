@@ -5,6 +5,7 @@
     "main": "index.js",
     "scripts": {
         "test": "nodemon ./tests/index.js",
+        "test2": "nodemon ./tests/index2.js",
         "dev": "nodemon index.js"
     },
     "keywords": [],

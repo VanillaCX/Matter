@@ -31,7 +31,7 @@ class Slots {
             edition
         };
 
-        const {valid, errors, sanitised} = Slots.schema.validateDoc(document);
+        const {valid, errors, sanitised} = Slots.schema.validate(document);
 
         if(!valid){
             throw new SchemaError(errors);
