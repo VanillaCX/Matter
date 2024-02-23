@@ -24,6 +24,7 @@ class Slots {
         return new Slots({id, defaultSlot: matter.meta.defaultSlot, slots: matter.slots});
     }
 
+
     static get schema(){
         return this.#schema;
     }

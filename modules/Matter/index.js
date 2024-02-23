@@ -97,9 +97,36 @@ class Matter {
 
     }
 
+    
+
+    async getEditionInSlot(name = this.meta.tag("defaultSlot")){
+
+        const slot = this.slots.find(name)
+
+        if(!slot){
+            throw new ReferenceError("NO_SUCH_SLOT")
+        }
+
+        const edition = slot.edition;
+
+        if(!edition){
+            throw new ReferenceError("EMPTY_SLOT")
+        }
+
+
+        return await this.editions.open(edition);
+    }
+
+    async getDefaultEdition(){
+        return await this.getEditionInSlot();
+    }
+
+
     static validateDoc(document){
         return this.#schema.validate(document);
     }
+
+
 
     
 
