@@ -45,7 +45,7 @@ class Matter {
     static #schema = new Schema({
         id: {type: Squid, required: true},
         meta: {schema: metaSchema, required: true},
-        slots: [{schema: Slots.schema}],
+        slots: {schema: Slots.schema},
         editions: [{type: ShortText}],
     });
 
@@ -55,8 +55,9 @@ class Matter {
         if(!valid){
             throw new SchemaError(errors);
         }
+        
         this.id = sanitised.id;
-
+        
         this.meta = new Meta({
             schema: metaSchema,
             tags: sanitised.meta
@@ -77,6 +78,7 @@ class Matter {
             await QMatter.updateOne(filter, saveDoc);
         }
         
+        
 
         this.model = model;
 
@@ -86,7 +88,11 @@ class Matter {
             editions: sanitised.editions
         });
 
-        this.slots = new Slots(sanitised.slots);
+        this.slots = new Slots({
+            id: this.id,
+            slots: sanitised.slots,
+            defaultSlot: meta.defaultSlot
+        });
 
 
     }
@@ -94,6 +100,8 @@ class Matter {
     static validateDoc(document){
         return this.#schema.validate(document);
     }
+
+    
 
     static async create({model, author, name = `New ${model}`}){
         const matterExists = await QMatter.exists({
@@ -112,6 +120,8 @@ class Matter {
             throw new ReferenceError("MODEL_NOT_FOUND")
         }
 
+        
+
 
         // Can create the Matter now.
         const document = {
@@ -125,7 +135,7 @@ class Matter {
             slots: [{
                 name: "default",
             }],
-            editions: [],
+            editions: ["default"],
         }
 
         const {
@@ -133,6 +143,7 @@ class Matter {
             errors,
             sanitised
         } = Matter.validateDoc(document);
+
 
         if(!valid){
             throw new SchemaError(errors)
@@ -144,7 +155,7 @@ class Matter {
         return new Matter({...sanitised, model: modelInstance});;
     }
 
-    static async open({id, name, model} = {}){
+    static async open({name, model} = {}){
         const matter = await QMatter.findOne({
             "meta.name": name,
             "meta.model": model
@@ -162,41 +173,6 @@ class Matter {
 
         return new Matter({...matter, model: modelInstance});;
     }
-
-    async fillSlot({name = this.meta.tag("defaultSlot"), edition} = {}){
-        this.slots.fillSlot(name, edition);
-
-        const filter = {id: this.id}
-
-        const slots = this.slots.list;
-        const saveDoc = {
-            slots
-        }
-
-        await QMatter.updateOne(filter, saveDoc);
-    }
-
-    async openSlot(name = this.meta.tag("defaultSlot")){
-        const slot = this.slots.find(name)
-        
-        if(!slot){
-            throw new ReferenceError("NO_SUCH_SLOT")
-        }
-
-        const edition = slot.edition;
-
-        if(!edition){
-            throw new ReferenceError("EMPTY_SLOT")
-        }
-
-
-        return await this.editions.open(edition);
-    }
-
-    
-
-    
-
     
 }
 

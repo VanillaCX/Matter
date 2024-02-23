@@ -8,7 +8,7 @@ class Meta {
     constructor({schema, tags} = {}){
         this.#schema = (schema instanceof Schema) ? schema : new Schema(schema);
 
-        const {valid, errors, sanitised} = this.#schema.validateDoc(tags);
+        const {valid, errors, sanitised} = this.validateDoc(tags);
 
         if(!valid){
             throw new SchemaError(errors);
@@ -25,13 +25,13 @@ class Meta {
     tag(key, value){
 
         if(value){
-            this.set({[key]: value})
+            this.#set({[key]: value})
         }
 
         return this.#tags[key]
     }
 
-    set(docFrag){
+    #set(docFrag){
         const {valid, errors, sanitised} = this.#schema.validatePartial(docFrag);
         
         if(!valid){
@@ -51,13 +51,7 @@ class Meta {
     }
 
     validateDoc(tags){
-        const {valid, errors, sanitised} = this.#schema.validateDoc(tags);
-        
-        if(!valid){
-            throw new SchemaError(errors);
-        }
-
-        this.#tags = sanitised;
+        return  this.#schema.validate(tags);
     }
 
     get list(){

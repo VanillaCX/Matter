@@ -5,12 +5,16 @@ const {
 } = require("@VanillaCX/Schema")
 
 class Model {
-    schema;
+    #schema;
     id;
     constructor({id, schema} = {}){
         this.id = id;
         const parsedSchema = Schema.parse(schema);
-        this.schema = new Schema(parsedSchema)
+        this.#schema = new Schema(parsedSchema)
+    }
+
+    get schema(){
+        return this.#schema
     }
 
     validateDoc(document){
@@ -26,16 +30,13 @@ class Model {
             throw new Error("MODEL_EXISTS")
         }
 
-        const serialisedSchema = JSON.stringify(Schema.serialise(schema));
-
         const result = await QModels.insertOne({
             id,
-            schema: serialisedSchema
+            schema: schema.stringified
         })
 
         return result;
     }
-
     
 
     static async open(id) {

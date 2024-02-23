@@ -1,25 +1,49 @@
+const { QMatter } = require("../Queries")
+
 const {Schema, SchemaError, ShortText} = require("@VanillaCX/Schema");
 
 class Slots {
-    static #schema = new Schema({
+    static #schema = new Schema([{
         name: {type: ShortText, required: true},
         edition: {type: ShortText},
-    });
+    }]);
 
-    constructor(slots = []){
+    constructor({id, slots = [], defaultSlot} = {}){
         this.array = slots;
-        
+        this.defaultSlot = defaultSlot;
+        this.id = id
     }
 
-    get list(){
-        return this.array;
+    static async open (id){
+        const matter = await QMatter.findOne({id})
+
+        if(!matter){
+            throw new ReferenceError("MATTER_NOT_FOUND")
+        }
+
+        return new Slots({id, defaultSlot: matter.meta.defaultSlot, slots: matter.slots});
     }
 
     static get schema(){
         return this.#schema;
     }
 
-    create(name, edition){
+    get list(){
+        return this.array;
+    }
+
+    async #saveSlots(){
+        const filter = {id: this.id}
+
+        const docFrag = {
+            slots: this.array
+        }
+
+        return await QMatter.updateOne(filter, docFrag);
+
+    }
+
+    async create(name, edition = ""){
         const exists = this.exists(name);
 
         if(exists){
@@ -38,14 +62,25 @@ class Slots {
         }
 
         this.array.push(sanitised)
+
+        return await this.#saveSlots()
     }
 
-    fillSlot(name, edition){
+    async fill({edition, slot = this.defaultSlot} = {}){
+
+        const partialDoc = [{edition, name: slot}]
+
+        const {valid, errors, sanitised} = Slots.schema.validatePartial(partialDoc);
+
+        if(!valid){
+            throw new SchemaError(errors);
+        }
+
         let modified = false;
 
-        this.array.forEach((slot, index, array) => {
-            if(slot.name === name){
-                array[index].edition = edition;
+        this.array.forEach((_slot, index, array) => {
+            if(_slot.name === slot){
+                array[index].edition = sanitised[0].edition;
                 modified = true;
             }
         })
@@ -54,30 +89,34 @@ class Slots {
             throw new ReferenceError("SLOT_DOESNT_EXIST")
         }
 
-        return modified
+         return await this.#saveSlots()
 
     }
 
-    remove(name){
-        const exists = this.exists(name);
+    async remove(slot){
+        const exists = this.exists(slot);
 
         if(!exists){
             throw new ReferenceError("SLOT_NOT_FOUND")
         }
 
-        const slots = this.array.filter(slot => slot.name !== name);
+        const new_slots = this.array.filter(_slot => _slot.name !== slot);
 
-        this.array = slots
+        this.array = new_slots
+
+        return await this.#saveSlots()
     }
 
-    exists(name){
-        const slot = this.find(name);
 
-        return (slot) ? true : false
+
+    exists(slot){
+        const _slot = this.get(slot);
+
+        return (_slot) ? true : false
     }
 
-    find(name){
-        return this.array.find(slot => slot.name === name)
+    get(slot){
+        return this.array.find(_slot => _slot.name === slot)
     }
 }
 
