@@ -8,7 +8,7 @@ class Meta {
     constructor({schema, tags} = {}){
         this.#schema = (schema instanceof Schema) ? schema : new Schema(schema);
 
-        const {valid, errors, sanitised} = this.validateDoc(tags);
+        const {valid, errors, sanitised} = this.#schema.validate(tags);
 
         if(!valid){
             throw new SchemaError(errors);
@@ -46,12 +46,8 @@ class Meta {
 
         this.#tags = saveDoc.meta;
 
-        this.#onUpdate();
+        this.#onUpdate(this.list);
 
-    }
-
-    validateDoc(tags){
-        return  this.#schema.validate(tags);
     }
 
     get list(){

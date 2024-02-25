@@ -101,7 +101,7 @@ class Matter {
 
     async getEditionInSlot(name = this.meta.tag("defaultSlot")){
 
-        const slot = this.slots.find(name)
+        const slot = this.slots.get(name)
 
         if(!slot){
             throw new ReferenceError("NO_SUCH_SLOT")

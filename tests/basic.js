@@ -111,22 +111,116 @@ const openMatterDefaultEdition = async ({model_id, matter_name}) => {
             name: matter_name,
         });
 
-        let edition;
+
+
+        const edition = await matter.getDefaultEdition();
+
+        //const edition = await matter.editions.open(id);
+
+        //matter.slots.fill({slot: "Christmas", edition: edition.id})
+        //matter.slots.remove("Christmas")
+        //matter.slots.exists("Christmas")
+        //matter.slots.get("Christmas")
+        //matter.slots.list
+        //matter.slots.create("Christmas")
+
+
+
+        console.group("Edition Details ...")
+        console.log("edition.final:", edition.final)
+        console.log("edition.draft:", edition.draft)
+        console.groupEnd()
+        
+    } catch(error) {
+        console.log(error);
+
+    }
+
+    
+}
+
+const openMatterEditionInSlot = async ({model_id, matter_name}) => {
+
+    try {
+        const matter = await Matter.open({
+            model: model_id,
+            name: matter_name,
+        });
+
+
+
+        const edition = await matter.getEditionInSlot("default");
+
+        //const edition = await matter.editions.open(id);
+
         // Gets edition stored in default slot
-        edition = await matter.getEditionFromSlot()
-        edition = await matter.getEditionById()
+
+        //matter.slots.fill({slot: "Christmas", edition: edition.id})
+        //matter.slots.remove("Christmas")
+        //matter.slots.exists("Christmas")
+        //matter.slots.get("Christmas")
+        //matter.slots.list
+        //matter.slots.create("Christmas")
 
 
-        matter.slots.fill({slot: "Christmas", edition: edition.id})
-        matter.slots.remove("Christmas")
-        matter.slots.exists("Christmas")
-        matter.slots.get("Christmas")
-        matter.slots.list
-        matter.slots.create("Christmas")
+
+        console.group("Edition Details ...")
+        console.log("edition.final:", edition.final)
+        console.log("edition.draft:", edition.draft)
+        console.groupEnd()
+        
+    } catch(error) {
+        console.log(error);
+
+    }
+
+    
+}
 
 
-        Slots.schema()
-        Slots.open(matterID)
+const openMatterUpdateDraft = async ({model_id, matter_name, updated_document}) => {
+
+    try {
+        const matter = await Matter.open({
+            model: model_id,
+            name: matter_name,
+        });
+
+
+        // Open default Edition
+        const edition = await matter.getDefaultEdition();
+
+        console.log("draft before update: ", edition.draft)
+
+        const updated_draft = await edition.updateDraft(updated_document)
+
+
+        console.group("Edition Details ...")
+        console.log("edition.final:", edition.final)
+        console.log("edition.draft:", edition.draft)
+        console.groupEnd()
+        
+    } catch(error) {
+        console.log(error);
+
+    }
+
+    
+}
+
+const openMatterApproveDraft = async ({model_id, matter_name}) => {
+
+    try {
+        const matter = await Matter.open({
+            model: model_id,
+            name: matter_name,
+        });
+
+
+        // Open default Edition
+        const edition = await matter.getDefaultEdition();
+
+        await edition.approveDraft()
 
         console.group("Edition Details ...")
         console.log("edition.final:", edition.final)
@@ -161,4 +255,15 @@ const openMatterDefaultEdition = async ({model_id, matter_name}) => {
     description: "URL to image"
 }})*/
 
-openMatterDefaultEdition({model_id: "artwork", matter_name: "clouds"})
+// WORKS
+//openMatterDefaultEdition({model_id: "artwork", matter_name: "clouds"})
+
+// WORKS
+//openMatterEditionInSlot({model_id: "artwork", matter_name: "clouds"})
+
+// WORKS
+/*openMatterUpdateDraft({model_id: "artwork", matter_name: "clouds", updated_document: {
+    subtitle: `Subtitle Changed  at ${Date.now()}`,
+}})*/
+
+openMatterApproveDraft({model_id: "artwork", matter_name: "clouds"})

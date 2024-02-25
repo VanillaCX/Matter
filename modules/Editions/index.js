@@ -6,8 +6,11 @@ class Editions {
     constructor({matterID, model, editions = []} = {}){
         this.array = editions;
         this.model = model;
-        this.matterID = matterID
+        this.matter = matterID
+
     }
+
+    
 
     async open(id) {
         const document = await QEditions.findOne({id});
@@ -52,7 +55,7 @@ class Editions {
 
         this.array.push(id);
 
-        const filter = {id: this.matterID}
+        const filter = {id: this.matter}
 
         const docFrag = {
             editions: this.array

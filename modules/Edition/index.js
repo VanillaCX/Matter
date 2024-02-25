@@ -18,6 +18,7 @@ const editionSchema = (model) => {
 
 class Edition {
     #schema;
+    #modelSchema;
     #draft;
     #final;
     
@@ -30,14 +31,13 @@ class Edition {
         return this.#final;
     }
 
-    updateDraft(draftFrag){
-        const partialDoc = {
-            draft: {
-                ...this.#draft, ...draftFrag
-            }
-        };
+    async updateDraft(draftFrag){
 
-        const {valid, errors, sanitised} = this.#schema.validatePartial(partialDoc);
+        const document = {
+            ...this.#draft, ...draftFrag
+        }
+
+        const {valid, errors, sanitised} = this.#modelSchema.validate(document);
 
         if(!valid){
             throw new SchemaError(errors)
@@ -45,29 +45,27 @@ class Edition {
 
         const filter = {id: this.id}
         const docFrag = {
-            draft: sanitised.draft
+            draft: sanitised
         }
 
-        QEditions.updateOne(filter, docFrag);
+        await QEditions.updateOne(filter, docFrag);
 
-        this.#draft = sanitised.draft;
+        this.#draft = sanitised;
 
         return this.draft
 
     }
 
     async approveDraft(){
-        const finalFrag = {
-            final: {
-                ...this.draft
-            }
+        const document = {
+            ...this.draft
         }
 
         const {
             valid,
             errors,
             sanitised
-        } = this.#schema.validatePartial(finalFrag);
+        } = this.#modelSchema.validate(document);
 
         if(!valid){
             throw new SchemaError(errors)
@@ -78,12 +76,12 @@ class Edition {
         }
 
         const docFrag = {
-            final: sanitised.final
+            final: sanitised
         }
 
         await QEditions.updateOne(filter, docFrag);
 
-        this.#final = sanitised.final;
+        this.#final = sanitised;
 
         return this.final;
 
@@ -91,7 +89,9 @@ class Edition {
 
 
     constructor({document, model}){
+        console.log("constrcutor: model:", model)
         this.#schema = editionSchema(model);
+        this.#modelSchema = model
 
         const {valid, errors, sanitised} = this.#schema.validate(document);
 
