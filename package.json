@@ -6,12 +6,22 @@
     "scripts": {
         "dev": "nodemon index.js",
         "test-basic": "nodemon ./tests/basic.js",
-        "test-diff": "nodemon ./tests/diff.js"
+        "test-diff": "nodemon ./tests/diff.js",
+        "test-diff2": "nodemon ./tests/diff2.js",
+        "test-diff3": "nodemon ./tests/diff3.js",
+        "test-diff4": "nodemon ./tests/diff4.js",
+        "test-diff5": "nodemon ./tests/diff5.js",
+        "test-diff6": "nodemon ./tests/diff6.js",
+        "test-diff7": "nodemon ./tests/diff7.js",
+        "test-schema": "nodemon ./tests/schema.js",
+        "test-schema2": "nodemon ./tests/schema2.js",
+        "test-matter": "nodemon ./tests/matter.js"
     },
     "keywords": [],
     "author": "",
     "license": "",
     "dependencies": {
+        "@VanillaCX/Errors": "github:VanillaCX/Errors",
         "@VanillaCX/Query": "github:VanillaCX/Query",
         "@VanillaCX/Schema": "github:VanillaCX/Schema",
         "dotenv": "^16.3.1"

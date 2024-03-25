@@ -6,12 +6,18 @@ const metaSchema = new Schema({
     name: {type: ShortText, required: true},
 });
 
+const darkMatterSchema = new Schema({
+    name: {type: ShortText},
+});
+
 const editionSchema = (model) => {
     return new Schema({
         id: {type: ShortText, required: true},
         meta: {schema: metaSchema, required: true},
         final: {schema: model.schema, required: true},
         draft: {schema: model.schema, required: true},
+        differentialMatter: {schema: model.schema},
+        darkMatter: {schema: darkMatterSchema, required: true}
     })
 }
 
